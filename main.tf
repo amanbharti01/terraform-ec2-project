@@ -42,6 +42,15 @@ resource "aws_instance" "my_ec2" {
 
   vpc_security_group_ids = [aws_security_group.ec2_sg.id]
 
+  # ⭐ ADD THIS BLOCK HERE ⭐
+  user_data = <<-EOF
+#!/bin/bash
+sudo dnf install -y nginx
+sudo systemctl enable nginx
+sudo systemctl start nginx
+echo "<h1>Deployed using Terraform 🚀</h1>" > /usr/share/nginx/html/index.html
+EOF
+
   tags = {
     Name = "Terraform-EC2"
   }
