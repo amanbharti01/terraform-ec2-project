@@ -1,7 +1,11 @@
 variable "ami" {
-  description = "AMI ID of EC2"
+  description = "EC2 AMI ID"
 }
 
 variable "vpc_id" {
   description = "VPC ID"
+}
+
+variable "subnet" {
+  description = "Subnet ID"
 }
