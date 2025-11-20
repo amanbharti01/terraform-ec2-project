@@ -2,13 +2,9 @@ provider "aws" {
   region = "us-east-1"
 }
 
-resource "aws_key_pair" "mykey" {
-  key_name   = "mykey"
-  public_key = file("~/.ssh/id_rsa.pub")
-}
-
+# Security Group allowing SSH + HTTP
 resource "aws_security_group" "ec2_sg" {
-  name        = "ec2_sg"
+  name        = "simple_ec2_sg"
   description = "Allow SSH and HTTP"
   vpc_id      = var.vpc_id
 
@@ -36,11 +32,15 @@ resource "aws_security_group" "ec2_sg" {
   }
 }
 
+# EC2 Instance
 resource "aws_instance" "my_ec2" {
-  ami           = var.ami
-  instance_type = "t2.micro"
-  key_name      = aws_key_pair.mykey.key_name
-  security_groups = [aws_security_group.ec2_sg.name]
+  ami                    = var.ami
+  instance_type          = "t3.micro"
+  subnet_id              = var.subnet
+  key_name               = "ubuntu"
+  associate_public_ip_address = true
+
+  vpc_security_group_ids = [aws_security_group.ec2_sg.id]
 
   tags = {
     Name = "Terraform-EC2"
